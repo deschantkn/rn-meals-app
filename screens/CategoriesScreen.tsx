@@ -1,12 +1,23 @@
 import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 
-import { CATEGORIES } from '../data/dummy-data';
+import { CustomHeaderButtons, Item } from '../components/HeaderButton';
 import CategoryGridTile from '../components/CategoryGridTile';
+import { CATEGORIES } from '../data/dummy-data';
+
 
 const CategoriesScreen = ({ navigation }) => {
   navigation.setOptions({
     headerTitle: 'Meal Categories',
+    headerLeft: () => (
+      <CustomHeaderButtons>
+        <Item
+          title="Menu"
+          iconName="ios-menu"
+          onPress={() => navigation.toggleDrawer()}
+        />
+      </CustomHeaderButtons>
+    )
   });
 
   const renderGridItem = (itemData) => {
