@@ -1,9 +1,11 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 
-import { MEALS } from '../data/dummy-data';
 import { CustomHeaderButtons, Item } from '../components/HeaderButton';
 import DefaultText from '../components/DefaultText';
+import { RootState } from '../App';
+import { toggleFavorite } from '../store/actions/meals';
 
 const ListItem = props => {
   return (
@@ -15,8 +17,12 @@ const ListItem = props => {
 
 const MealDetailScreen = ({ route, navigation }) => {
   const { mealId } = route.params;
+  const availableMeals = useSelector((state: RootState) => state.meals.meals);
+  const isFavorite = useSelector((state: RootState) => state.meals.favoriteMeals.some(meal => meal.id === mealId));
+  const selectedMeal = availableMeals.find((meal) => meal.id === mealId);
 
-  const selectedMeal = MEALS.find((meal) => meal.id === mealId);
+  const dispatch = useDispatch();
+  const toggleFavoriteHandler = () => dispatch(toggleFavorite(mealId));
 
   navigation.setOptions({
     headerTitle: selectedMeal.title,
@@ -24,10 +30,8 @@ const MealDetailScreen = ({ route, navigation }) => {
       <CustomHeaderButtons>
         <Item 
           title="Favorite" 
-          iconName="ios-star"
-          onPress={() => {
-            console.log('Mark as  favorite!')
-          }}
+          iconName={isFavorite ? "ios-star" : "ios-star-outline"}
+          onPress={toggleFavoriteHandler}
         />
       </CustomHeaderButtons>
     )
